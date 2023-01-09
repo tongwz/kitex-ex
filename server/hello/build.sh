@@ -2,7 +2,7 @@
 RUN_NAME="helloserver"
 
 mkdir -p output/bin
-cp script/* output/
+cp ../../script/* output/
 chmod +x output/bootstrap.sh
 
 if [ "$IS_SYSTEM_TEST_ENV" != "1" ]; then
