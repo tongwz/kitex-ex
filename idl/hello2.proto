@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+option go_package = "hello2";
+
+package hello2;
+
+// 请求入参
+message Request {
+  string name = 1;
+  int32 id = 2;
+  string update_time = 3;
+  repeated ReqBody req_body = 4; // repeated 是go中的slice
+}
+message ReqBody {
+  string number = 1;
+  int32 id =2;
+}
+
+message Response {
+  int64 code = 1;
+  string msg = 2;
+}
+
+// 有stream关键词表示 streaming 消息类型 具体客户端  和 服务端进行消息的处理区别 我这边需要自己做一部分理解
+
+service Hello2Service {
+  rpc ClientSideStreaming(stream Request) returns (Response) {} // 客户端侧 streaming
+  rpc ServerSideStreaming(Request) returns (stream Response) {} // 服务端侧 streaming
+  rpc BidiSideStreaming(stream Request) returns (stream Response) {} // 双向流
+}

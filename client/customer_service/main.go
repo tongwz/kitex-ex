@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/remote/codec/thrift"
+	"github.com/cloudwego/kitex/pkg/transmeta"
 	hello2 "kitex-ex/kitex_gen/hello"
 	hello "kitex-ex/kitex_gen/hello/helloservice"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -17,18 +19,20 @@ func main() {
 		// 解析协议
 		client.WithPayloadCodec(thrift.NewThriftCodecWithConfig(thrift.FastRead|thrift.FastWrite)),
 		// 多路复用
-		client.WithMuxConnection(3),
-		//client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
+		client.WithMuxConnection(2),
+		// 传输协议 使用TTHeader
+		client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
+	i := 0
 	for {
 		req := &hello2.Request{
-			Message: "t request 1",
-			Data:    "t request data1",
+			Message: "t request " + strconv.Itoa(i),
+			Data:    "t request data" + strconv.Itoa(i),
 			ReqBody: &hello2.ReqBody{
-				Name: "hello",
+				Name: "hello" + strconv.Itoa(i),
 				Type: 1,
 			},
 		}
@@ -37,6 +41,7 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Println(resp)
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 1000)
+		i++
 	}
 }
