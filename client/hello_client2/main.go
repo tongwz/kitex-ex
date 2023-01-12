@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/remote/codec/protobuf"
+	"github.com/cloudwego/kitex/pkg/retry"
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
 	hello22 "kitex-ex/kitex_gen/hello2"
@@ -24,6 +25,9 @@ func main() {
 	opts = append(opts, client.WithHostPorts("0.0.0.0:2009"))
 	// 解析协议
 	opts = append(opts, client.WithPayloadCodec(protobuf.NewProtobufCodec()))
+	rp := retry.NewFailurePolicy()
+	rp.WithMaxRetryTimes(2)
+	opts = append(opts, client.WithFailureRetry(rp))
 	// 多路复用
 	opts = append(opts, client.WithMuxConnection(2))
 	clientHello2, err := hello2.NewClient("hello2Service", opts...)

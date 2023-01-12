@@ -41,7 +41,7 @@ func main() {
 			log.Fatal(err)
 		}
 		log.Println(resp)
-		time.Sleep(time.Millisecond * 1000)
+		time.Sleep(time.Millisecond * 1)
 		i++
 	}
 }
